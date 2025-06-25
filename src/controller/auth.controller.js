@@ -10,7 +10,7 @@ const signup = async (req, res) => {
   }
   try {
     validateSignUpData(req);
-    
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User({ ...req.body, password: hashedPassword });
@@ -34,6 +34,38 @@ const signup = async (req, res) => {
   }
 };
 
+const login = async (req, res) => {
+  const { email, password } = req.body;
+  const existingUser = await User.findOne({ email });
+
+  if (!existingUser) {
+    return res.status(400).json({ message: "User does not exist" });
+  }
+
+  try {
+    const isValidPassword = await existingUser.validatePassword(password);
+
+    if (!isValidPassword) {
+      return res.status(400).json({ message: "Invalid Credentials!" });
+    }
+
+    const token = await existingUser.getJWT();
+
+    res.cookie("token", token, {
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "User logged in successfully",
+    });
+  } catch (error) {
+    console.log("error:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   signup,
+  login,
 };

@@ -1,8 +1,9 @@
-import mongoose from "mongoose";
-import { Schema } from "mongoose";
-import validator from "validator";
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const validator = require("validator");
+const jwt = require("jsonwebtoken");
 
-const SignupSchem = new Schema(
+const UserSchem = new Schema(
   {
     firstName: {
       type: String,
@@ -33,4 +34,14 @@ const SignupSchem = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Signup", SignupSchem);
+UserSchem.methods.getJWT = async function () {
+  const user = this;
+
+  const token = await jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: "7d",
+  });
+
+  return token;
+};
+
+module.exports = mongoose.model("User", UserSchem);

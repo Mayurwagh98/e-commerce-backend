@@ -1,5 +1,6 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
+const { validateSignUpData } = require("../utils/validations");
 
 const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -8,6 +9,8 @@ const signup = async (req, res) => {
     return res.status(400).json({ message: "User already exists" });
   }
   try {
+    validateSignUpData(req);
+    
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User({ ...req.body, password: hashedPassword });

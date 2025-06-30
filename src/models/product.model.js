@@ -6,6 +6,7 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
     minLength: 3,
+    lowercase: true,
   },
   decription: {
     type: String,

@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const AuthRoute = require("./src/routes/auth.route");
 const UserRoute = require("./src/routes/user.route");
+const ProductRoute = require("./src/routes/product.route");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", AuthRoute);
 app.use("/api/user", UserRoute);
+app.use("/api/product", ProductRoute);
 
 connectDB()
   .then(() => {

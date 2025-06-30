@@ -3,7 +3,9 @@ const connectDB = require("./src/config/database");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const UserRoute = require("./src/routes/auth.route");
+const AuthRoute = require("./src/routes/auth.route");
+const UserRoute = require("./src/routes/user.route");
+const ProductRoute = require("./src/routes/product.route");
 
 const app = express();
 
@@ -18,7 +20,9 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-app.use("/api/auth", UserRoute);
+app.use("/api/auth", AuthRoute);
+app.use("/api/user", UserRoute);
+app.use("/api/product", ProductRoute);
 
 connectDB()
   .then(() => {

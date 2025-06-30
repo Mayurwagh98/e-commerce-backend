@@ -31,4 +31,22 @@ const getAllProducts = async (req, res) => {
   }
 };
 
-module.exports = { addProduct, getAllProducts };
+const productdetails = async (req, res) => {
+  const { productId } = req.query;
+
+  if (!productId) {
+    return res.status(400).json({ message: "Product id is required" });
+  }
+  try {
+    const existingProduct = await Product.findById(productId);
+    if (!existingProduct) {
+      return res.status(400).json({ message: "Product does not exist" });
+    }
+    res.status(200).json({ success: true, product: existingProduct });
+  } catch (error) {
+    console.log("error:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+module.exports = { addProduct, getAllProducts, productdetails };

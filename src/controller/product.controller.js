@@ -7,7 +7,10 @@ const addProduct = async (req, res) => {
     return res.status(400).json({ message: "Product already exists" });
   }
   try {
-    const newProduct = await Product.create(req.body);
+    const newProduct = await Product.create({
+      ...req.body,
+      user_id: req.user.id,
+    });
 
     res.status(201).json({
       success: true,

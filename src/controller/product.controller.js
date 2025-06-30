@@ -74,4 +74,37 @@ const updateProduct = async (req, res) => {
   }
 };
 
-module.exports = { addProduct, getAllProducts, productdetails, updateProduct };
+const deleteProduct = async (req, res) => {
+  const { productId } = req.query;
+  if (!productId) {
+    return res.status(400).json({ message: "Product id is required" });
+  }
+  try {
+    const existingProduct = await Product.findById(productId);
+
+    if (!existingProduct) {
+      return res.status(400).json({ message: "Product does not exist" });
+    }
+
+    await Product.findByIdAndDelete(productId);
+
+    const allProducts = await Product.find({});
+
+    res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+      allProducts: allProducts,
+    });
+  } catch (error) {
+    console.log("error:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+module.exports = {
+  addProduct,
+  getAllProducts,
+  productdetails,
+  updateProduct,
+  deleteProduct,
+};

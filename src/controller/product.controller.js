@@ -22,10 +22,13 @@ const addProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
+    const allProducts = await Product.find({});
+
+    res.status(200).json({ success: true, products: allProducts });
   } catch (error) {
     console.log("error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-module.exports = { addProduct };
+module.exports = { addProduct, getAllProducts };

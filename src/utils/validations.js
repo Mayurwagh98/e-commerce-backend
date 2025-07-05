@@ -12,12 +12,14 @@ const validateSignUpData = (req) => {
 };
 
 const validateEditProfileData = (req) => {
+  if (!req.body) {
+    throw new Error("missing req body");
+  }
   const allowedEditFields = ["firstName", "lastName", "imgaeUrl", "avatar"];
 
   const isEditAllowed = Object.keys(req.body).every((field) =>
     allowedEditFields.includes(field)
   );
-
   return isEditAllowed;
 };
 
